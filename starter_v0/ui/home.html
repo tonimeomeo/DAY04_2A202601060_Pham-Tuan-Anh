@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScholarAI | Academic Research Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#00a6e0",
+                    "tertiary": "#bcc7de",
+                    "on-tertiary-fixed": "#111c2d",
+                    "surface-bright": "#2c3a4c",
+                    "on-tertiary-fixed-variant": "#3c475a",
+                    "on-background": "#d4e4fa",
+                    "on-secondary-fixed": "#001e2c",
+                    "on-error-container": "#ffdad6",
+                    "on-surface-variant": "#c6c6cd",
+                    "secondary": "#7bd0ff",
+                    "on-secondary-container": "#00374d",
+                    "on-primary-fixed": "#131b2e",
+                    "on-tertiary": "#263143",
+                    "on-tertiary-container": "#768197",
+                    "surface-container-highest": "#273647",
+                    "on-primary-container": "#798098",
+                    "outline-variant": "#45464d",
+                    "inverse-primary": "#565e74",
+                    "background": "#051424",
+                    "surface-container-lowest": "#010f1f",
+                    "primary-container": "#0f172a",
+                    "secondary-fixed": "#c4e7ff",
+                    "secondary-fixed-dim": "#7bd0ff",
+                    "surface-container-low": "#0d1c2d",
+                    "error": "#ffb4ab",
+                    "on-primary": "#283044",
+                    "surface-dim": "#051424",
+                    "on-secondary": "#00354a",
+                    "surface-tint": "#bec6e0",
+                    "tertiary-fixed": "#d8e3fb",
+                    "surface-variant": "#273647",
+                    "primary-fixed-dim": "#bec6e0",
+                    "error-container": "#93000a",
+                    "tertiary-container": "#0c1829",
+                    "surface-container-high": "#1c2b3c",
+                    "on-surface": "#d4e4fa",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "inverse-surface": "#d4e4fa",
+                    "tertiary-fixed-dim": "#bcc7de",
+                    "primary": "#bec6e0",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#004c69",
+                    "outline": "#909097",
+                    "surface": "#051424",
+                    "surface-container": "#122131",
+                    "primary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#233143"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit-xs": "4px",
+                    "gutter": "24px",
+                    "unit-md": "16px",
+                    "container-max": "1440px",
+                    "unit-lg": "24px",
+                    "unit-sm": "8px",
+                    "margin": "48px",
+                    "unit-xl": "48px"
+            },
+            "fontFamily": {
+                    "display-lg": ["\"Source Serif 4\""],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-md": ["\"Source Serif 4\""],
+                    "label-sm": ["JetBrains Mono"],
+                    "label-md": ["JetBrains Mono"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-lg": ["\"Source Serif 4\""]
+            },
+            "fontSize": {
+                    "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            scroll-behavior: smooth;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .academic-mesh {
+            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+            background-size: 32px 32px;
+            opacity: 0.2;
+        }
+        .ocean-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .sidebar-item-active {
+            background-color: #00a6e0;
+            color: #001e2c;
+        }
+
+        /* LIGHT MODE OVERRIDES */
+        html:not(.dark) body, html:not(.dark) .bg-background, html:not(.dark) .bg-surface {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+        }
+        html:not(.dark) .bg-surface-container-low, html:not(.dark) .bg-surface-container-high, html:not(.dark) .bg-surface-container-highest {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html:not(.dark) .hover\:bg-surface-container-high:hover {
+            background-color: #f1f5f9 !important;
+        }
+        html:not(.dark) .text-on-surface, html:not(.dark) .text-on-surface-variant {
+            color: #1e293b !important;
+        }
+        html:not(.dark) .text-on-tertiary-container {
+            color: #475569 !important;
+        }
+        html:not(.dark) .border-outline-variant {
+            border-color: #cbd5e1 !important;
+        }
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        }
+        html:not(.dark) .academic-mesh {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px) !important;
+            opacity: 0.4;
+        }
+        html:not(.dark) .ocean-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(0, 166, 224, 0.08) 0%, transparent 70%) !important;
+        }
+        html:not(.dark) .text-secondary {
+            color: #0284c7 !important; 
+        }
+        html:not(.dark) .bg-primary-container {
+            background-color: #f1f5f9 !important;
+        }
+        html:not(.dark) .bg-secondary-container {
+            background-color: #e0f2fe !important;
+            color: #0369a1 !important;
+        }
+        html:not(.dark) .text-on-secondary-container {
+            color: #0369a1 !important;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-50 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant">
+<div class="flex items-center gap-unit-md">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-surface tracking-tight">ScholarAI</span>
+</div>
+<div class="hidden md:flex items-center flex-1 max-w-xl mx-gutter">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-primary-container border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:ring-1 focus:ring-secondary transition-all font-label-md text-label-md" placeholder="Search research papers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors duration-200">notifications</button>
+<button id="themeToggleBtn" class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors duration-200">light_mode</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors duration-200">settings</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer active:opacity-80 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="A professional close-up headshot of a distinguished academic researcher with soft-focus library books in the background. The lighting is cinematic and cool-toned, dominated by deep slate blues and subtle cyan highlights to match the ScholarAI interface. High detail in facial features conveying intellectual curiosity and rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL3Nt0wTSgrb_0_f3ov7R2D8t9KqysPlhuRYiJUGbJUvvKwI3yL9HyNIHeTW8Ml0lBp7Z4WXJYdIg8Ij_QmE1xKSX69Tx_e5f7YDZrqFXuzc8oLPxbUPT4Qw1N8gxdhmDCRJGWqdYdjjuVAiNXn4J51CDGS7e5iAAwIWJ-eo5npztjxs4T-6RGXrUNhonI_vhZkfE93tPYRmTRdQz5-gXxThyY-g4zWfhQFHIQXnbfp8hrNBb0XrVn"/>
+</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col w-[280px] h-[calc(100vh-64px)] p-unit-md gap-unit-sm bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant sticky top-16">
+<div class="mb-unit-xl px-2">
+<h3 class="font-headline-md text-[20px] text-primary mb-1">Research Portal</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Deep-Sea Analysis</p>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-bold bg-secondary-container text-on-secondary-container transition-all active:scale-[0.98]" href="home.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+<span class="font-label-md text-label-md">Research</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-[0.98]" href="library.html">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-label-md text-label-md">Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-[0.98]" href="analysis.html">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Analysis</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-[0.98]" href="settings.html">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+<div class="mt-unit-xl pt-unit-xl border-t border-outline-variant/30 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-[0.98]" href="settings.html">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+</div>
+</nav>
+<button class="mt-auto w-full bg-secondary text-on-secondary-fixed font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-secondary/10">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md">New Project</span>
+</button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 w-full relative bg-background overflow-y-auto">
+<!-- Hero Section -->
+<section class="relative min-h-[700px] flex items-center justify-center overflow-hidden px-4 md:px-margin py-unit-xl">
+<div class="absolute inset-0 academic-mesh z-0"></div>
+<div class="absolute inset-0 ocean-glow z-0"></div>
+<!-- Solar System Dynamic Background -->
+<div class="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-70" style="mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);">
+<canvas id="atomCanvas" class="w-full h-full"></canvas>
+</div>
+<div class="relative z-10 max-w-container-max text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/5 mb-unit-lg">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Deep-Sea Research Lab</span>
+</div>
+<h1 class="font-display-lg text-4xl md:text-5xl lg:text-[56px] text-on-surface max-w-4xl mx-auto mb-unit-md leading-tight">
+                        Map Research Evidence with <span class="text-secondary">AI Precision.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-tertiary-container max-w-2xl mx-auto mb-unit-xl">
+                        A sophisticated AI-driven platform for literature review, citation mapping, and evidence synthesis. Accelerate your academic writing with precise deep-sea analysis.
+                    </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-unit-md">
+<a href="chat.html" class="bg-secondary text-on-secondary-fixed px-unit-xl py-4 rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-secondary/20 flex items-center gap-2">
+                            Start Researching <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+<button class="border border-outline-variant bg-surface-container-low text-on-surface px-unit-xl py-4 rounded-lg font-bold text-lg hover:bg-surface-container-high transition-all">
+                            Try Sample Query
+                        </button>
+</div>
+<!-- Visual Anchor Removed -->
+</div>
+</section>
+<!-- Bento Grid Features -->
+<section class="px-4 md:px-margin py-unit-xl max-w-container-max mx-auto">
+<div class="mb-unit-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Deep Intellectual Tools</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Advanced capabilities engineered for the rigorous demands of higher academic research.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-unit-lg h-auto md:h-[600px]">
+<!-- Large Feature: Analysis -->
+<div class="md:col-span-8 glass-card rounded-xl p-unit-xl flex flex-col justify-between group overflow-hidden relative">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-unit-lg border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">analytics</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-unit-sm">Deep-Sea Analysis</h3>
+<p class="font-body-md text-body-md text-on-tertiary-container max-w-md">Our proprietary algorithm dives deep into archival databases to find obscure connections and synthesize meta-analytical insights in seconds.</p>
+</div>
+<!-- Mock UI Details -->
+<div class="relative z-10 mt-8 w-full border border-outline-variant bg-surface-container-lowest/50 backdrop-blur-md rounded-xl p-4 shadow-2xl flex flex-col gap-4">
+    <div class="flex items-center justify-between border-b border-outline-variant/50 pb-2">
+        <span class="font-label-sm text-on-surface-variant text-xs uppercase tracking-wider flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-secondary">search</span> Query: Impact of LLMs on Peer Review</span>
+        <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+    </div>
+    
+    <!-- Source Row 1 -->
+    <div class="flex items-center gap-4 bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 hover:border-secondary/50 transition-colors cursor-pointer">
+        <div class="w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-tertiary">article</span>
+        </div>
+        <div class="flex-1 overflow-hidden">
+            <h4 class="font-label-md text-sm text-on-surface truncate">Generative AI in Academic Publishing</h4>
+            <div class="flex gap-2 text-xs text-on-surface-variant mt-1">
+                <span>Smith et al. (2024)</span> &bull; 
+                <span class="text-secondary">Peer-Reviewed</span>
+            </div>
+        </div>
+        <div class="w-16 flex flex-col gap-1 items-end shrink-0">
+            <span class="text-[10px] text-teal-400 font-label-sm">98% Match</span>
+            <div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-teal-400 w-[98%]"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Source Row 2 -->
+    <div class="flex items-center gap-4 bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 hover:border-secondary/50 transition-colors cursor-pointer">
+        <div class="w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-tertiary">dataset</span>
+        </div>
+        <div class="flex-1 overflow-hidden">
+            <h4 class="font-label-md text-sm text-on-surface truncate">Dataset: LLM hallucinations in citations</h4>
+            <div class="flex gap-2 text-xs text-on-surface-variant mt-1">
+                <span>Chen (2023)</span> &bull; 
+                <span class="text-[#f59e0b]">Dataset</span>
+            </div>
+        </div>
+        <div class="w-16 flex flex-col gap-1 items-end shrink-0">
+            <span class="text-[10px] text-teal-400 font-label-sm">85% Match</span>
+            <div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-teal-400 w-[85%]"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Source Row 3 -->
+    <div class="flex items-center gap-4 bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 hover:border-secondary/50 transition-colors cursor-pointer opacity-70">
+        <div class="w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-tertiary">biotech</span>
+        </div>
+        <div class="flex-1 overflow-hidden">
+            <h4 class="font-label-md text-sm text-on-surface truncate">Evaluating Methodologies for NLP</h4>
+            <div class="flex gap-2 text-xs text-on-surface-variant mt-1">
+                <span>Johnson (2022)</span> &bull; 
+                <span class="text-[#8b5cf6]">Method</span>
+            </div>
+        </div>
+        <div class="w-16 flex flex-col gap-1 items-end shrink-0">
+            <span class="text-[10px] text-[#f59e0b] font-label-sm">62% Match</span>
+            <div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-[#f59e0b] w-[62%]"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Feature: Smart Outlining -->
+<div class="md:col-span-4 bg-surface-container-high rounded-xl p-unit-lg border border-outline-variant hover:border-secondary/40 transition-colors flex flex-col">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center mb-unit-md border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary">schema</span>
+</div>
+<h3 class="font-headline-md text-[24px] text-on-surface mb-unit-sm">Smart Outlining</h3>
+<p class="font-label-md text-label-md text-on-tertiary-container flex-1">Automatically structure complex arguments with AI-generated hierarchies that maintain logical flow and academic rigor.</p>
+<div class="mt-unit-md p-4 bg-primary-container rounded border border-outline-variant/30">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-32 h-1.5 bg-outline-variant rounded-full"></div>
+</div>
+<div class="flex items-center gap-2 ml-4 mb-2">
+<div class="w-2 h-2 border border-secondary rounded-full"></div>
+<div class="w-24 h-1.5 bg-outline-variant/50 rounded-full"></div>
+</div>
+<div class="flex items-center gap-2 ml-4">
+<div class="w-2 h-2 border border-secondary rounded-full"></div>
+<div class="w-28 h-1.5 bg-outline-variant/50 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Feature: Scholarly Tone -->
+<div class="md:col-span-4 bg-surface-container-high rounded-xl p-unit-lg border border-outline-variant hover:border-secondary/40 transition-colors">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center mb-unit-md border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">history_edu</span>
+</div>
+<h3 class="font-headline-md text-[24px] text-on-surface mb-unit-sm">Scholarly Tone</h3>
+<p class="font-label-md text-label-md text-on-tertiary-container">Refine your writing to match institutional standards. Our AI understands the nuances of peer-reviewed literature across multiple disciplines.</p>
+</div>
+<!-- Feature: Citations -->
+<div class="md:col-span-8 glass-card rounded-xl p-unit-lg border-l-4 border-l-secondary flex flex-col md:flex-row items-center gap-unit-xl">
+<div class="flex-1">
+<h3 class="font-headline-md text-[24px] text-on-surface mb-unit-sm">Institutional Verification</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Every claim is backed by verified academic sources with automated citation management in APA, MLA, and Chicago styles.</p>
+</div>
+<div class="flex gap-2">
+<div class="px-3 py-1 bg-surface-container-highest rounded border border-outline-variant text-[10px] font-label-sm text-secondary uppercase tracking-widest">Verified Source</div>
+<div class="px-3 py-1 bg-surface-container-highest rounded border border-outline-variant text-[10px] font-label-sm text-secondary uppercase tracking-widest">Peer Reviewed</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats/Metric Section -->
+<section class="py-unit-xl px-margin bg-surface-container-lowest border-y border-outline-variant/30">
+<div class="max-w-container-max mx-auto grid grid-cols-2 md:grid-cols-4 gap-unit-xl text-center">
+<div>
+<div class="font-display-lg text-[48px] text-secondary mb-1">2M+</div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-on-tertiary-container">Papers Analyzed</div>
+</div>
+<div>
+<div class="font-display-lg text-[48px] text-secondary mb-1">99.8%</div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-on-tertiary-container">Citation Accuracy</div>
+</div>
+<div>
+<div class="font-display-lg text-[48px] text-secondary mb-1">15k+</div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-on-tertiary-container">Academic Partners</div>
+</div>
+<div>
+<div class="font-display-lg text-[48px] text-secondary mb-1">24/7</div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-on-tertiary-container">Research Support</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="flex flex-col md:flex-row justify-between items-center py-unit-lg px-margin w-full mt-auto bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline-variant">
+<div class="mb-unit-md md:mb-0">
+<span class="font-label-md text-label-md uppercase tracking-widest text-tertiary">ScholarAI</span>
+<p class="font-label-sm text-label-sm text-on-tertiary-container mt-1">© 2024 ScholarAI Research Platform. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-unit-lg">
+<a class="font-label-sm text-label-sm text-on-tertiary-container hover:text-on-surface transition-colors" href="#">Institutional Access</a>
+<a class="font-label-sm text-label-sm text-on-tertiary-container hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-tertiary-container hover:text-on-surface transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-tertiary-container hover:text-on-surface transition-colors" href="#">API Documentation</a>
+</div>
+</footer>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hover effect for feature cards
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+
+            // Smooth entrance animations
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.grid > div').forEach(el => {
+                el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+                observer.observe(el);
+            });
+        });
+    </script>
+
+    <!-- Solar System Animation Script -->
+    <script>
+        const canvasEl = document.getElementById('atomCanvas');
+        if (canvasEl) {
+            const ctx = canvasEl.getContext('2d');
+            let w, h;
+            
+            function resize() {
+                const dpr = window.devicePixelRatio || 1;
+                w = canvasEl.parentElement.clientWidth;
+                h = canvasEl.parentElement.clientHeight || 400; 
+                canvasEl.width = w * dpr;
+                canvasEl.height = h * dpr;
+                canvasEl.style.width = w + 'px';
+                canvasEl.style.height = h + 'px';
+                ctx.scale(dpr, dpr);
+            }
+            
+            window.addEventListener('resize', resize);
+            
+            let time = 0;
+            
+            // Node data for citation map
+            const nodes = Array.from({length: 45}, (_, i) => ({
+                x: Math.random(), // relative 0-1
+                y: Math.random(),
+                vx: (Math.random() - 0.5) * 0.0008,
+                vy: (Math.random() - 0.5) * 0.0008,
+                label: i === 5 ? "Source Verified" : i === 12 ? "Method Extracted" : i === 25 ? "Citation Mapped" : null
+            }));
+
+            function drawSonarMap() {
+                if (!w || !h) resize();
+                ctx.clearRect(0, 0, w, h);
+                
+                const isDark = document.documentElement.classList.contains('dark');
+                const baseColor = isDark ? 'rgba(123, 208, 255,' : 'rgba(2, 132, 199,'; // Cyan for dark, darker blue for light
+                
+                const cx = w * 0.7; // Shift right to balance hero text
+                const cy = h * 0.5;
+
+                // 1. Sonar Rings
+                const maxRadius = Math.max(w, h);
+                const ringSpacing = 120;
+                const offset = (time * 15) % ringSpacing;
+                
+                ctx.lineWidth = 1;
+                for (let r = offset; r < maxRadius; r += ringSpacing) {
+                    const alpha = Math.max(0, 0.15 * (1 - r / maxRadius));
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+                    ctx.strokeStyle = `${baseColor} ${alpha})`;
+                    ctx.stroke();
+                }
+
+                // Update node positions
+                nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    if (node.x < 0 || node.x > 1) node.vx *= -1;
+                    if (node.y < 0 || node.y > 1) node.vy *= -1;
+                });
+
+                // 2. Draw Citation Links (edges)
+                const maxDist = Math.min(w, h) * 0.25;
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const px1 = nodes[i].x * w;
+                        const py1 = nodes[i].y * h;
+                        const px2 = nodes[j].x * w;
+                        const py2 = nodes[j].y * h;
+                        
+                        const dist = Math.hypot(px2 - px1, py2 - py1);
+                        if (dist < maxDist) {
+                            const alpha = 0.25 * (1 - dist / maxDist);
+                            ctx.beginPath();
+                            ctx.moveTo(px1, py1);
+                            ctx.lineTo(px2, py2);
+                            ctx.strokeStyle = `${baseColor} ${alpha})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // 3. Draw Nodes and Labels
+                nodes.forEach(node => {
+                    const px = node.x * w;
+                    const py = node.y * h;
+                    
+                    ctx.beginPath();
+                    ctx.arc(px, py, node.label ? 4 : 2, 0, 2 * Math.PI);
+                    ctx.fillStyle = `${baseColor} 0.5)`;
+                    
+                    if (node.label) {
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = isDark ? '#7bd0ff' : '#0284c7';
+                        ctx.fillStyle = isDark ? '#7bd0ff' : '#0284c7';
+                    }
+                    
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    // Draw Label Text
+                    if (node.label) {
+                        ctx.font = '11px "JetBrains Mono"';
+                        
+                        // Add a small background pill for the label for readability
+                        const textWidth = ctx.measureText(node.label).width;
+                        ctx.fillStyle = isDark ? 'rgba(5, 20, 36, 0.6)' : 'rgba(255, 255, 255, 0.6)';
+                        ctx.beginPath();
+                        ctx.roundRect(px + 8, py - 14, textWidth + 8, 16, 4);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = isDark ? '#7bd0ff' : '#0284c7';
+                        ctx.fillText(node.label, px + 12, py - 2);
+                    }
+                });
+
+                time += 0.016; // Approx 60fps
+                requestAnimationFrame(drawSonarMap);
+            }
+            
+            setTimeout(() => {
+                resize();
+                requestAnimationFrame(drawSonarMap);
+            }, 100);
+        }
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        if (themeToggleBtn) {
+            // Check initial theme from HTML class
+            const isDark = document.documentElement.classList.contains('dark');
+            themeToggleBtn.textContent = isDark ? 'light_mode' : 'dark_mode';
+
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                const isNowDark = document.documentElement.classList.contains('dark');
+                themeToggleBtn.textContent = isNowDark ? 'light_mode' : 'dark_mode';
+            });
+        }
+    </script>
+</body></html>

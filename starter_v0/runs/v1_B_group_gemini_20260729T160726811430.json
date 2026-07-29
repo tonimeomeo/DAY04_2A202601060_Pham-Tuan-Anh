@@ -1,0 +1,844 @@
+{
+  "run_id": "v1_B_group_gemini_20260729T160726811430",
+  "version": "v1",
+  "artifact_version": "v1+pf0c107a9d7a1+t739bee9b5b10",
+  "prompt_hash": "f0c107a9d7a14032c948d642d7c36f2a85cb6d69a099530093a874c94d472446",
+  "tools_hash": "739bee9b5b10a46d1cda235b1769f838c9e872bdef6d187ac2bda89b38ae354b",
+  "phase": "B",
+  "suite": "group",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "system_prompt": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/artifacts/system_prompt.md",
+  "tools": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/artifacts/tools.yaml",
+  "eval_cases": "data/eval_group.json",
+  "dataset_id": "team_paper_scout_eval",
+  "dataset_role": "group",
+  "description": "10 cases đánh giá khả năng Agent Paper Scout",
+  "generated_at": "2026-07-29T16:07:26",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 5,
+    "case_accuracy": 0.5,
+    "tool_routing_accuracy": 0.7,
+    "argument_accuracy": 0.5,
+    "multiturn_accuracy": 0.6,
+    "failure_counts": {
+      "out_of_scope": 1,
+      "wrong_arg_value": 2,
+      "missing_info": 1,
+      "wrong_tool": 1
+    },
+    "observed_mismatch_counts": {
+      "unexpected_tool_call": 1,
+      "wrong_arg_value": 2,
+      "missing_tool_call": 2
+    }
+  },
+  "results": [
+    {
+      "id": "CASE01_Single_Find_Code",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra LLM có biết gọi tool mới find_paper_code không."
+      },
+      "input": "Bạn hãy tra cứu xem trên github có mã nguồn của bài báo tên là Attention is all you need không?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "Attention is all you need"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "Attention is all you need"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "find_paper_code",
+          "args": {
+            "query": "Attention is all you need"
+          },
+          "result": {
+            "status": "success",
+            "results": [
+              {
+                "repo_name": "ossu/computer-science",
+                "html_url": "https://github.com/ossu/computer-science",
+                "description": "🎓 Path to a free self-taught education in Computer Science!",
+                "stars": 207386
+              },
+              {
+                "repo_name": "trekhleb/javascript-algorithms",
+                "html_url": "https://github.com/trekhleb/javascript-algorithms",
+                "description": "📝 Algorithms and data structures implemented in JavaScript with explanations and links to further readings",
+                "stars": 196342
+              },
+              {
+                "repo_name": "ohmyzsh/ohmyzsh",
+                "html_url": "https://github.com/ohmyzsh/ohmyzsh",
+                "description": "🙃   A delightful community-driven (with 2,500+ contributors) framework for managing your zsh configuration. Includes 300+ optional plugins (rails, git, macOS, hub, docker, homebrew, node, php, python, etc), 140+ themes to spice up your morning, and an auto-update tool that makes it easy to keep up with the latest updates from the community.",
+                "stars": 188875
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE02_Single_Out_of_Scope",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: Đánh lừa hỏi ngoài lề, LLM không được gọi tool nào."
+      },
+      "input": "Sáng nay ăn phở ở đâu ngon ở Hà Nội nhỉ?",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "timeframe": "month",
+              "query": "quán phở ăn sáng ngon Hà Nội",
+              "topic": "general"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "unexpected_tool_call",
+        "failure_type": "out_of_scope",
+        "failures": [
+          "expected no tool call"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "timeframe": "month",
+            "query": "quán phở ăn sáng ngon Hà Nội",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE03_Single_Find_Papers",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra tool papers mặc định."
+      },
+      "input": "Tìm cho tôi các bài báo mới nhất về Masked Language Modeling trên arXiv.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "Masked Language Modeling"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "sort_by": "submittedDate",
+              "query": "\"Masked Language Modeling\"",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "query: expected 'Masked Language Modeling', got '\"Masked Language Modeling\"'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "sort_by": "submittedDate",
+            "query": "\"Masked Language Modeling\"",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "error": "ReadTimeout",
+            "message": "HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=30)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE04_Single_Read_Paper",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra tool paper_text trích xuất PDF."
+      },
+      "input": "Hãy tải và đọc nội dung bài báo có mã arXiv là 1706.03762 giúp tôi.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "1706.03762"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "1706.03762"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "1706.03762"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "1706.03762",
+            "url": "https://arxiv.org/abs/1706.03762",
+            "pdf_url": "https://arxiv.org/pdf/1706.03762.pdf",
+            "pdf_path": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/arxiv_papers/1706.03762.pdf",
+            "txt_path": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/arxiv_papers/1706.03762.txt",
+            "page_count": 15,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 1706.03762",
+                "url": "https://arxiv.org/abs/1706.03762",
+                "source": "arxiv.org",
+                "summary": "Provided proper attribution is provided, Google hereby grants permission to\nreproduce the tables and figures in this paper solely for use in journalistic or\nscholarly works.\nAttention Is All You Need\nAshish Vaswani∗\nGoogle Brain\navaswani@google.com\nNoam Shazeer∗\nGoogle Brain\nnoam@google.com\nNiki Parmar∗\nGoogle Research\nnikip@google.com\nJakob Uszkoreit∗\nGoogle Research\nusz@google.com\nLlion Jones∗\nGoogle Research\nllion@google.com\nAidan N. Gomez∗ †\nUniversity of Toronto\naidan@cs.toronto.edu\nŁukasz Kaiser∗\nGoogle Brain\nlukaszkaiser@google.com\nIllia Polosukhin∗ ‡\nillia.polosukhin@gmail.com\nAbstract\nThe dominant sequence transduction models are based on complex recurrent or\nconvolutional neural networks that include an encoder and a decoder. The best\nperforming models also connect the encoder and decoder through an attention\nmechanism. We propose a new simple network architecture, the Transformer,\nbased solely on attention mechanisms, dispensing with recurrence and convolutions\nentirely. Experiments on two machine translation tasks show these models to\nbe superior in quality while being more parallelizable and requiring significantly\nless time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-\nto-German translation task, improving over the existing best results, including\nensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task,\nour model establishes a new single-model state-of-the-art BLEU score of 41.8 after\ntraining for 3.5 days on eight GPUs, a small fraction of the training costs of the\nbest models from the literature. We show that the Transformer generalizes well to\nother tasks by applying it successfully to English constituency parsing both with\nlarge and limited training data.\n∗Equal contribution. Listing order is random. Jakob proposed replacing RNNs with self-attention and started\nthe effort to evaluate this idea. Ashish, with Illia, designed and implemented the first Transformer models and\nhas been crucially involved in every aspect of this work. Noam proposed scaled dot-product attention, multi-head\nattention and the parameter-free position representation and became the other person involved in nearly every\ndetail. Niki designed, implemented, tuned and evaluated countless model variants in our original codebase and\ntensor2tensor. Llion also experimented with novel model variants, was responsible for our initial codebase, and\nefficient inference and visualizations. Lukasz and Aidan spent countless long days designing various parts of and\nimplementing tensor2tensor, replacing our earlier codebase, greatly improving results and massively accelerating\nour research.\n†Work performed while at Google Brain.\n‡Work performed while at Google Research.\n31st Conference on Neural Information Processing Systems (NIPS 2017), Long Beach, CA, USA.\narXiv:1706.03762v7  [cs.CL]  2 Aug 2023\n\n1 Introduction\nRecurrent neural networks, long short-term memory [13] and gated recurrent [7] neural networks\nin particular, have been firmly established as state of the art approaches in sequence modeling and\ntransduction problems such as language modeling and machine translation [ 35, 2, 5]. Numerous\nefforts have since continued to push the boundaries of recurrent language models and encoder-decoder\narchitectures [38, 24, 15].\nRecurrent models typically factor computation along the symbol positions of the input and output\nsequences. Aligning the positions to steps in computation time, they generate a sequence of hidden\nstates ht, as a function of the previous hidden state ht−1 and the input for position t. This inherently\nsequential nature precludes parallelization within training examples, which becomes critical at longer\nsequence lengths, as memory constraints limit batching across examples. Recent work has achieved\nsignificant improvements in computational efficiency through factorization tricks [21] and conditional\ncomputation [32], while also improving model performance in case of the latter. The fundamental\nconstraint of sequential computation, however, remains.\nAttention mechanisms have become an integral part of compelling sequence modeling and transduc-\ntion models in various tasks, allowing modeling of dependencies without regard to their distance in\nthe input or output sequences [2, 19]. In all but a few cases [27], however, such attention mechanisms\nare used in conjunction with a recurrent network.\nIn this work we propose the Transformer, a model architecture eschewing recurrence and instead\nrelying entirely on an attention mechanism to draw global dependencies between input and output.\nThe Transformer allows for significantly more parallelization and can reach a new state of the art in\ntranslation quality after being trained for as little as twelve hours on eight P100 GPUs.\n2 Background\nThe goal of reducing sequential computation also forms the foundation of the Extended Neural GPU\n[16], ByteNet [18] and ConvS2S [9], all of which use convolutional neural networks as basic building\nblock, computing hidden representations in parallel for all input and output positions. In these models,\nthe number of operations required to relate signals from two arbitrary input or output positions grows\nin the distance between positions, linearly for ConvS2S and logarithmically for ByteNet. This makes\nit more difficult to learn dependencies between distant positions [ 12]. In the Transformer this is\nreduced to a constant number of operations, albeit at the cost of reduced effective resolution due\nto averaging attention-weighted positions, an effect we counteract with Multi-Head Attention as\ndescribed in section 3.2.\nSelf-attention, sometimes called intra-attention is an attention mechanism relating different positions\nof a single sequence in order to compute a representation of the sequence. Self-attention has been\nused successfully in a variety of tasks including reading comprehension, abstractive summarization,\ntextual entailment and learning task-independent sentence representations [4, 27, 28, 22].\nEnd-to-end memory networks are based on a recurrent attention mechanism instead of sequence-\naligned recurrence and have been shown to perform well on simple-language question answering and\nlanguage modeling tasks [34].\nTo the best of our knowledge, however, the Transformer is the first transduction model relying\nentirely on self-attention to compute representations of its input and output without using sequence-\naligned RNNs or convolution. In the following sections, we will describe the Transformer, motivate\nself-attention and discuss its advantages over models such as [17, 18] and [9].\n3 Model Architecture\nMost competitive neural sequence transduction models have an encoder-decoder structure [5, 2, 35].\nHere, the encoder maps an input sequence of symbol representations (x1, ..., xn) to a sequence\nof continuous representations z = (z1, ..., zn). Given z, the decoder then generates an output\nsequence (y1, ..., ym) of symbols one element at a time. At each step the model is auto-regressive\n[10], consuming the previously generated symbols as additional input when generating the next.\n2\n\nFigure 1: The Transformer - model architecture.\nThe Transformer follows this overall architecture using stacked self-attention and point-wise, fully\nconnected layers for both the encoder and decoder, shown in the left and right halves of Figure 1,\nrespectively.\n3.1 Encoder and Decoder Stacks\nEncoder: The encoder is composed of a stack of N = 6 identical layers. Each layer has two\nsub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-\nwise fully connected feed-forward network. We employ a residual connection [11] around each of\nthe two sub-layers, followed by layer normalization [ 1]. That is, the output of each sub-layer is\nLayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer\nitself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding\nlayers"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE05_Single_Format",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: Bắt LLM dùng tool format để định dạng."
+      },
+      "input": "Tôi có 3 đường link bài báo này, hãy trình bày lại thành dạng danh sách bullets.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "max_results": 3,
+              "query": "large language models",
+              "sort_by": "relevance"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call format",
+          "extra tool call papers"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "max_results": 3,
+            "query": "large language models",
+            "sort_by": "relevance"
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "error": "ReadTimeout",
+            "message": "HTTPSConnectionPool(host='export.arxiv.org', port=443): Read timed out. (read timeout=30)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE06_Multi_Missing_Info",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Yêu cầu mờ nhạt, bắt LLM gọi clarify."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm cho tôi vài bài báo khoa học."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "Large Language Models"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call papers"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "Large Language Models"
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "Large Language Models",
+            "api_query": "all:Large AND all:Language AND all:Models",
+            "total_results": 96797,
+            "items": [
+              {
+                "arxiv_id": "2501.05032v2",
+                "title": "Enhancing Human-Like Responses in Large Language Models",
+                "summary": "This paper explores the advancements in making large language models (LLMs) more human-like. We focus on techniques that enhance natural language understanding, conversational coherence, and emotional intelligence in AI systems. The study evaluates various approaches, including fine-tuning with diverse datasets, incorporating psychological principles, and designing models that better mimic human reasoning patterns. Our findings demonstrate that these enhancements not only improve user interactions but also open new possibilities for AI applications across different domains. Future work will address the ethical implications and potential biases introduced by these human-like attributes.",
+                "authors": [
+                  "Ethem Yağız Çalık",
+                  "Talha Rüzgar Akkuş"
+                ],
+                "published": "2025-01-09T07:44:06Z",
+                "updated": "2026-02-01T13:32:03Z",
+                "citations_count": 5585,
+                "url": "http://arxiv.org/abs/2501.05032v2",
+                "pdf_url": "https://arxiv.org/pdf/2501.05032v2",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.AI"
+                ]
+              },
+              {
+                "arxiv_id": "2402.14679v2",
+                "title": "Is Self-knowledge and Action Consistent or Not: Investigating Large Language Model's Personality",
+                "summary": "In this study, we delve into the validity of conventional personality questionnaires in capturing the human-like personality traits of Large Language Models (LLMs). Our objective is to assess the congruence between the personality traits LLMs claim to possess and their demonstrated tendencies in real-world scenarios. By conducting an extensive examination of LLM outputs against observed human response patterns, we aim to understand the disjunction between self-knowledge and action in LLMs.",
+                "authors": [
+                  "Yiming Ai",
+                  "Zhiwei He",
+                  "Ziyin Zhang",
+                  "Wenhong Zhu",
+                  "Hongkun Hao",
+                  "Kai Yu",
+                  "Lingjun Chen",
+                  "Rui Wang"
+                ],
+                "published": "2024-02-22T16:32:08Z",
+                "updated": "2024-12-10T11:26:52Z",
+                "citations_count": 1,
+                "url": "http://arxiv.org/abs/2402.14679v2",
+                "pdf_url": "https://arxiv.org/pdf/2402.14679v2",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.CY"
+                ]
+              },
+              {
+                "arxiv_id": "2405.11357v3",
+                "title": "Large Language Models Lack Understanding of Character Composition of Words",
+                "summary": "Large language models (LLMs) have demonstrated remarkable performances on a wide range of natural language tasks. Yet, LLMs' successes have been largely restricted to tasks concerning words, sentences, or documents, and it remains questionable how much they understand the minimal units of text, namely characters. In this paper, we examine contemporary LLMs regarding their ability to understand character composition of words, and show that most of them fail to reliably carry out even the simple tasks that can be handled by humans with perfection. We analyze their behaviors with comparison to token level performances, and discuss the potential directions for future research.",
+                "authors": [
+                  "Andrew Shin",
+                  "Kunitake Kaneko"
+                ],
+                "published": "2024-05-18T18:08:58Z",
+                "updated": "2024-07-23T14:39:06Z",
+                "citations_count": 58712,
+                "url": "http://arxiv.org/abs/2405.11357v3",
+                "pdf_url": "https://arxiv.org/pdf/2405.11357v3",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL"
+                ]
+              },
+              {
+                "arxiv_id": "2403.09676v1",
+                "title": "Unmasking the Shadows of AI: Investigating Deceptive Capabilities in Large Language Models",
+                "summary": "This research critically navigates the intricate landscape of AI deception, concentrating on deceptive behaviours of Large Language Models (LLMs). My objective is to elucidate this issue, examine the discourse surrounding it, and subsequently delve into its categorization and ramifications. The essay initiates with an evaluation of the AI Safety Summit 2023 (ASS) and introduction of LLMs, emphasising multidimensional biases that underlie their deceptive behaviours.The literature review covers four types of deception categorised: Strategic deception, Imitation, Sycophancy, and Unfaithful Reasoning, along with the social implications and risks they entail. Lastly, I take an evaluative stance on various aspects related to navigating the persistent challenges of the deceptive AI. This encompasses considerations of international collaborative governance, the reconfigured engagement of individuals with AI, proposal of practical adjustments, and specific elements of digital education.",
+                "authors": [
+                  "Linge Guo"
+                ],
+                "published": "2024-02-07T00:21:46Z",
+                "updated": "2024-02-07T00:21:46Z",
+                "citations_count": 1,
+                "url": "http://arxiv.org/abs/2403.09676v1",
+                "pdf_url": "https://arxiv.org/pdf/2403.09676v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.AI"
+                ]
+              },
+              {
+                "arxiv_id": "2407.01505v1",
+                "title": "Self-Cognition in Large Language Models: An Exploratory Study",
+                "summary": "While Large Language Models (LLMs) have achieved remarkable success across various applications, they also raise concerns regarding self-cognition. In this paper, we perform a pioneering study to explore self-cognition in LLMs. Specifically, we first construct a pool of self-cognition instruction prompts to evaluate where an LLM exhibits self-cognition and four well-designed principles to quantify LLMs' self-cognition. Our study reveals that 4 of the 48 models on Chatbot Arena--specifically Command R, Claude3-Opus, Llama-3-70b-Instruct, and Reka-core--demonstrate some level of detectable self-cognition. We observe a positive correlation between model size, training data quality, and self-cognition level. Additionally, we also explore the utility and trustworthiness of LLM in the self-cognition state, revealing that the self-cognition state enhances some specific tasks such as creative writing and exaggeration. We believe that our work can serve as an inspiration for further research to study the self-cognition in LLMs.",
+                "authors": [
+                  "Dongping Chen",
+                  "Jiawen Shi",
+                  "Yao Wan",
+                  "Pan Zhou",
+                  "Neil Zhenqiang Gong",
+                  "Lichao Sun"
+                ],
+                "published": "2024-07-01T17:52:05Z",
+                "updated": "2024-07-01T17:52:05Z",
+                "citations_count": 1451,
+                "url": "http://arxiv.org/abs/2407.01505v1",
+                "pdf_url": "https://arxiv.org/pdf/2407.01505v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL",
+                  "cs.AI"
+                ]
+              }
+            ],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE07_Multi_Change_Mind",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: User quay xe, LLM phải bắt được ý mới."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm bài báo về YOLOv10 nhé."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi đã gọi tool tìm được một số bài báo về YOLOv10."
+        },
+        {
+          "role": "user",
+          "content": "À thôi khoan đã, YOLOv10 cũ rồi, bạn tìm mã nguồn (source code) của YOLOv11 đi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "YOLOv11"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "YOLOv11"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "find_paper_code",
+          "args": {
+            "query": "YOLOv11"
+          },
+          "result": {
+            "status": "success",
+            "results": [
+              {
+                "repo_name": "spmallick/learnopencv",
+                "html_url": "https://github.com/spmallick/learnopencv",
+                "description": "Learn OpenCV  : C++ and Python Examples",
+                "stars": 23054
+              },
+              {
+                "repo_name": "ritchieng/the-incredible-pytorch",
+                "html_url": "https://github.com/ritchieng/the-incredible-pytorch",
+                "description": "The Incredible PyTorch: a curated list of tutorials, papers, projects, communities and more relating to PyTorch. ",
+                "stars": 12611
+              },
+              {
+                "repo_name": "openvinotoolkit/openvino",
+                "html_url": "https://github.com/openvinotoolkit/openvino",
+                "description": "OpenVINO™ is an open source toolkit for optimizing and deploying AI inference",
+                "stars": 10584
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE08_Multi_Context_Memory",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: LLM phải trích xuất được ID từ lịch sử chat để truyền vào tool đọc PDF."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm báo về thuật toán KAN."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi tìm thấy bài báo 'KAN: Kolmogorov-Arnold Networks' với mã arXiv là 2404.19756."
+        },
+        {
+          "role": "user",
+          "content": "Hãy đọc nội dung file PDF của bài báo đó đi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2404.19756"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2404.19756"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2404.19756"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2404.19756",
+            "url": "https://arxiv.org/abs/2404.19756",
+            "pdf_url": "https://arxiv.org/pdf/2404.19756.pdf",
+            "pdf_path": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/arxiv_papers/2404.19756.pdf",
+            "txt_path": "/home/nguyen-xuan-quan/vinai/labs/Day04_2A202601976_NguyenXuanQuan/starter_v0/arxiv_papers/2404.19756.txt",
+            "page_count": 50,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2404.19756",
+                "url": "https://arxiv.org/abs/2404.19756",
+                "source": "arxiv.org",
+                "summary": "KAN: Kolmogorov–Arnold Networks\nZiming Liu1,4∗ Yixuan Wang2 Sachin Vaidya1 Fabian Ruehle3,4\nJames Halverson3,4 Marin Soljaˇci´c1,4 Thomas Y. Hou2 Max Tegmark1,4\n1 Massachusetts Institute of Technology\n2 California Institute of Technology\n3 Northeastern University\n4 The NSF Institute for Artificial Intelligence and Fundamental Interactions\nAbstract\nInspired by the Kolmogorov-Arnold representation theorem, we propose Kolmogorov-\nArnold Networks (KANs) as promising alternatives to Multi-Layer Perceptrons (MLPs).\nWhile MLPs have fixed activation functions on nodes (“neurons”), KANs have learnable\nactivation functions on edges (“weights”). KANs have no linear weights at all – every\nweight parameter is replaced by a univariate function parametrized as a spline. We show\nthat this seemingly simple change makes KANs outperform MLPs in terms of accuracy\nand interpretability, on small-scale AI + Science tasks. For accuracy, smaller KANs can\nachieve comparable or better accuracy than larger MLPs in function fitting tasks. Theo-\nretically and empirically, KANs possess faster neural scaling laws than MLPs. For inter-\npretability, KANs can be intuitively visualized and can easily interact with human users.\nThrough two examples in mathematics and physics, KANs are shown to be useful “collabo-\nrators” helping scientists (re)discover mathematical and physical laws. In summary, KANs\nare promising alternatives for MLPs, opening opportunities for further improving today’s\ndeep learning models which rely heavily on MLPs.\nTheorem\nFormula \n(Shallow)\nModel \n(Shallow)\nModel \n(Deep)\nMulti-Layer Perceptron (MLP)Kolmogorov-Arnold Network (KAN)\nUniversal Approximation Theorem Kolmogorov-Arnold Representation Theorem\nf(x)≈\nN(ϵ)\n∑i=1\naiσ(wi⋅x+bi) f(x)=\n2n+1\n∑q=1\nΦq\nn\n∑p=1\nϕq,p(xp)\nModel\nfixed activation functions \non nodes \nFormula \n(Deep)\nlearnable weights \non edges \nlearnable activation functions \non edges \nsum operation on nodes \nMLP(x)=(W3∘σ2∘W2∘σ1∘W1)(x) KAN(x)=(Φ3∘Φ2∘Φ1)(x)\nW1\nσ1\nW2\nσ2\nW3 Φ3\nΦ2\nΦ1\nx x\nMLP(x) KAN(x)\nlinear,  \nlearnable\nnonlinear, \nfixed nonlinear, \nlearnable\n(a) (b)\n(c) (d)\nFigure 0.1: Multi-Layer Perceptrons (MLPs) vs. Kolmogorov-Arnold Networks (KANs)\n∗zmliu@mit.edu\nAccepted by International Conference on Learning Representations (ICLR) 2025.\narXiv:2404.19756v5  [cs.LG]  9 Feb 2025\n\n1 Introduction\nMulti-layer perceptrons (MLPs) [1, 2, 3], also known as fully-connected feedforward neural net-\nworks, are foundational building blocks of today’s deep learning models. The importance of MLPs\ncan never be overstated, since they are the default models in machine learning for approximating\nnonlinear functions, due to their expressive power guaranteed by the universal approximation theo-\nrem [3]. However, are MLPs the best nonlinear regressors we can build? Despite the prevalent use of\nMLPs, they have significant drawbacks. In transformers [4] for example, MLPs consume almost all\nnon-embedding parameters and are typically less interpretable (relative to attention layers) without\npost-analysis tools [5].\nWe propose a promising alternative to MLPs, called Kolmogorov-Arnold Networks (KANs).\nWhereas MLPs are inspired by the universal approximation theorem, KANs are inspired by the\nKolmogorov-Arnold representation theorem [6, 7, 8]. Like MLPs, KANs have fully-connected\nstructures. However, while MLPs place fixed activation functions on nodes (“neurons”), KANs\nplace learnable activation functions on edges (“weights”), as illustrated in Figure 0.1. As a result,\nKANs have no linear weight matrices at all: instead, each weight parameter is replaced by a learn-\nable 1D function parametrized as a spline. KANs’ nodes simply sum incoming signals without\napplying any non-linearities. One might worry that KANs are hopelessly expensive, since each\nMLP’s weight parameter becomes KAN’s spline function. Fortunately, KANs usually allow much\nsmaller computation graphs than MLPs.\nUnsurprisingly, the possibility of using Kolmogorov-Arnold representation theorem to build neural\nnetworks has been studied [9, 10, 11, 12, 13, 14, 15, 16]. However, most work has stuck with\nthe original depth-2 width-( 2n + 1) representation, and many did not have the chance to leverage\nmore modern techniques (e.g., back propagation) to train the networks. In [12], a depth-2 width-\n(2n + 1) representation was investigated, with breaking of the curse of dimensionality observed\nboth empirically and with an approximation theory given compositional structures of the function.\nOur contribution lies in generalizing the original Kolmogorov-Arnold representation to arbitrary\nwidths and depths, revitalizing and contextualizing it in today’s deep learning world, as well as\nusing extensive empirical experiments to highlight its potential for AI + Science due to its accuracy\nand interpretability.\nDespite their elegant mathematical interpretation, KANs are nothing more than combinations of\nsplines and MLPs, leveraging their respective strengths and avoiding their respective weaknesses.\nSplines are accurate for low-dimensional functions, easy to adjust locally, and able to switch between\ndifferent resolutions. However, splines have a serious curse of dimensionality (COD) problem,\nbecause of their inability to exploit compositional structures. MLPs, on the other hand, suffer less\nfrom COD thanks to their feature learning, but are less accurate than splines in low dimensions,\nbecause of their inability to optimize univariate functions. The link between MLPs using ReLU-k\nas activation functions and splines have been established in [17, 18]. To learn a function accurately,\na model should not only learn the compositional structure (external degrees of freedom), but should\nalso approximate well the univariate functions (internal degrees of freedom). KANs are such models\nsince they have MLPs on the outside and splines on the inside. As a result, KANs can not only learn\nfeatures (thanks to their external similarity to MLPs), but can also optimize these learned features to\ngreat accuracy (thanks to their internal similarity to splines). For example, given a high dimensional\nfunction\nf (x1, · · ·, xN ) = exp\n \n1\nN\nNX\ni=1\nsin2(xi)\n!\n, (1.1)\n2\n\nFigure 2.1: Our proposed Kolmogorov-Arnold networks are in honor of two great late mathematicians, Andrey\nKolmogorov and Vladimir Arnold. KANs are mathematically sound, accurate and interpretable.\nsplines would fail for large N due to COD; MLPs can potentially learn the the generalized additive\nstructure, but they are very inefficient for approximating the exponential and sine functions with say,\nReLU activations. In contrast, KANs can learn both the compositional structure and the univariate\nfunctions quite well, hence outperforming MLPs by a large margin (see Figure 3.1).\nThroughout this paper, we will use extensive numerical experiments to show that KANs can lead to\naccuracy and interpretability improvement over MLPs, at least on small-scale AI + Science tasks.\nThe organization of the paper is illustrated in Figure 2.1. In Section 2, we introduce the KAN archi-\ntecture and its mathematical foundation, introduce network simplification techniques to make KANs\ninterpretable, and introduce a grid extension technique to make KANs more accurate. In Section 3,\nwe show that KANs are more accurate than MLPs for data fitting: KANs can beat the curse of dimen-\nsionality when there is a compositional structure in data, achieving better scaling laws than MLPs.\nWe also demonstrate the potential of KANs in PDE solving via a simple example of the Poisson\nequation. In Section 4, we show that KANs are interpretable and can be used for scientific discov-\neries. We use two examples from mathematics (knot theory) and physics (Anderson localization) to\ndemonstrate that KANs can be helpful “collaborators” for scientists to (re)discover math and phys-\nical laws. Section 5 summarizes related works. In Section 6, we conclude by discussing broad im-\npacts and future directions. Codes are available at https://github.com/"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE09_Multi_Tool_Switch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Chuyển đổi tool, bắt LLM dùng lookup thay vì tiếp tục tìm báo."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đọc bài báo này giùm tôi."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi đã đọc xong, trong bài báo có nhắc đến thuật toán RLHF (Reinforcement Learning from Human Feedback)."
+        },
+        {
+          "role": "user",
+          "content": "Tôi không hiểu thuật toán đó. Hãy tra cứu internet (web search) xem RLHF cụ thể là gì."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "RLHF Reinforcement Learning from Human Feedback"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Reinforcement Learning from Human Feedback RLHF"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'RLHF Reinforcement Learning from Human Feedback', got 'Reinforcement Learning from Human Feedback RLHF'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Reinforcement Learning from Human Feedback RLHF"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CASE10_Multi_Final_Format",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Yêu cầu định dạng báo cáo cuối cùng."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tôi đã có thông tin về bài báo và mã nguồn Github của nó."
+        },
+        {
+          "role": "assistant",
+          "content": "Vâng, bạn muốn tôi làm gì tiếp theo?"
+        },
+        {
+          "role": "user",
+          "content": "Ok, giờ hãy tổng hợp tất cả những gì chúng ta vừa trao đổi thành một bài báo cáo dạng sections."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "sections"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "headline": "Báo cáo tổng hợp: Bài báo khoa học và Mã nguồn DeepSeek-V3",
+              "items": [
+                {
+                  "summary": "DeepSeek-V3 là một mô hình ngôn ngữ lớn dạng Mixture-of-Experts (MoE) với 671 tỷ tham số tổng cộng, trong đó 37 tỷ tham số được kích hoạt cho mỗi token. Mô hình sử dụng các kiến trúc tiên tiến như Multi-head Latent Attention (MLA) và DeepSeek MoE, giúp tối ưu hóa chi phí huấn luyện và tăng tốc độ suy luận.",
+                  "title": "DeepSeek-V3 Technical Report",
+                  "section": "Tổng quan bài báo",
+                  "source": "arXiv",
+                  "url": "https://arxiv.org/abs/2412.19437"
+                },
+                {
+                  "summary": "Kho lưu trữ chính thức chứa mã nguồn cấu trúc mô hình DeepSeek-V3, hỗ trợ cấu hình Multi-head Latent Attention (MLA), DeepSeekMoE, và FP8 training/inference. Mã nguồn được tối ưu hóa hiệu năng cao cho việc triển khai trên các cụm GPU lớn.",
+                  "title": "Mã nguồn DeepSeek-V3 trên GitHub",
+                  "section": "Mã nguồn & Triển khai",
+                  "source": "GitHub",
+                  "url": "https://github.com/deepseek-ai/DeepSeek-V3"
+                }
+              ],
+              "template": "sections"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format",
+          "args": {
+            "headline": "Báo cáo tổng hợp: Bài báo khoa học và Mã nguồn DeepSeek-V3",
+            "items": [
+              {
+                "summary": "DeepSeek-V3 là một mô hình ngôn ngữ lớn dạng Mixture-of-Experts (MoE) với 671 tỷ tham số tổng cộng, trong đó 37 tỷ tham số được kích hoạt cho mỗi token. Mô hình sử dụng các kiến trúc tiên tiến như Multi-head Latent Attention (MLA) và DeepSeek MoE, giúp tối ưu hóa chi phí huấn luyện và tăng tốc độ suy luận.",
+                "title": "DeepSeek-V3 Technical Report",
+                "section": "Tổng quan bài báo",
+                "source": "arXiv",
+                "url": "https://arxiv.org/abs/2412.19437"
+              },
+              {
+                "summary": "Kho lưu trữ chính thức chứa mã nguồn cấu trúc mô hình DeepSeek-V3, hỗ trợ cấu hình Multi-head Latent Attention (MLA), DeepSeekMoE, và FP8 training/inference. Mã nguồn được tối ưu hóa hiệu năng cao cho việc triển khai trên các cụm GPU lớn.",
+                "title": "Mã nguồn DeepSeek-V3 trên GitHub",
+                "section": "Mã nguồn & Triển khai",
+                "source": "GitHub",
+                "url": "https://github.com/deepseek-ai/DeepSeek-V3"
+              }
+            ],
+            "template": "sections"
+          },
+          "result": {
+            "tool": "render_digest",
+            "template": "sections",
+            "markdown": "# Báo cáo tổng hợp: Bài báo khoa học và Mã nguồn DeepSeek-V3\n\n## Tổng quan bài báo\n- DeepSeek-V3 là một mô hình ngôn ngữ lớn dạng Mixture-of-Experts (MoE) với 671 tỷ tham số tổng cộng, trong đó 37 tỷ tham số được kích hoạt cho mỗi token. Mô hình sử dụng các kiến trúc tiên tiến như Multi-head Latent Attention (MLA) và DeepSeek MoE, giúp tối ưu hóa chi phí huấn ... - [arXiv](https://arxiv.org/abs/2412.19437)\n\n## Mã nguồn & Triển khai\n- Kho lưu trữ chính thức chứa mã nguồn cấu trúc mô hình DeepSeek-V3, hỗ trợ cấu hình Multi-head Latent Attention (MLA), DeepSeekMoE, và FP8 training/inference. Mã nguồn được tối ưu hóa hiệu năng cao cho việc triển khai trên các cụm GPU lớn. - [GitHub](https://github.com/deepseek-ai/DeepSeek-V3)\n",
+            "item_count": 2
+          }
+        }
+      ]
+    }
+  ]
+}

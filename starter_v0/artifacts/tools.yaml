@@ -9,62 +9,62 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Hỏi lại người dùng khi THIẾU THÔNG TIN bắt buộc (ví dụ: thiếu handle/URL) hoặc YÊU CẦU XÁC NHẬN (yes/no) trước các hành động gửi/đăng bài ra ngoài."
+    description: "Hỏi lại người dùng khi thiếu thông tin bắt buộc (ví dụ: không biết tìm chủ đề gì, không có URL, không có handle). Cũng dùng để xác nhận trước hành động nhạy cảm như gửi/đăng bài (response_type=yes_no). KHÔNG đoán bừa khi thiếu thông tin quan trọng."
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Nội dung câu hỏi dành cho người dùng"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu phản hồi cần nhận: 'text' khi cần xin thêm thông tin, 'yes_no' khi cần xác nhận hành động"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        question: {type: string, default: "", description: "Câu hỏi cần hỏi người dùng"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời mong đợi. Dùng 'text' khi cần thông tin, 'yes_no' khi cần xác nhận."}
+        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn (chỉ dùng khi response_type=choice)"}
       required: [question]
 
   - name: timeline
-    description: "Trích xuất danh sách bài đăng/tweet của MỘT CÁ NHÂN HOẶC TÀI KHOẢN CỤ THỂ (ví dụ: Sam Altman -> sama, Elon Musk -> elonmusk)."
+    description: "Lấy các bài đăng gần đây."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Twitter/X handle của tài khoản (ví dụ: sama, elonmusk, karpathy)"}
-        limit: {type: integer, default: 5, description: "Số lượng bài đăng cần lấy"}
+        screenname: {type: string, default: "", description: "Tên tài khoản"}
+        limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm kiếm các bài đăng trên mạng xã hội theo CHỦ ĐỀ HOẶC TỪ KHÓA (không thuộc về một cá nhân cụ thể)."
+    description: "Tìm trên mạng xã hội."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa hoặc chủ đề tìm kiếm"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Sắp xếp theo 'Top' (phổ biến nhất) hoặc 'Latest' (mới nhất)"}
-        limit: {type: integer, default: 5, description: "Số lượng kết quả cần lấy"}
+        query: {type: string, default: "", description: "Từ khóa"}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
+        limit: {type: integer, default: 5, description: "Số lượng"}
       required: [query]
 
   - name: lookup
-    description: "Tìm kiếm bài viết hoặc tin tức trên internet theo từ khóa. Dùng topic='news' cho tin thời sự, timeframe='day' cho hôm nay, 'week' cho tuần này."
+    description: "Tìm kiếm thông tin trên web/internet. Dùng khi user muốn tra cứu khái niệm, định nghĩa, tin tức, hoặc thông tin tổng hợp từ web. Với viết tắt kèm tên đầy đủ, đặt viết tắt trước (ví dụ: 'RLHF Reinforcement Learning from Human Feedback'). Truyền query dạng plain text, không thêm dấu ngoặc kép."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa tìm kiếm"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại: 'news' cho tin tức/thời sự, 'general' cho thông tin chung"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian: 'day' (hôm nay), 'week' (tuần này), 'month', 'year'"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm, truyền plain text không thêm dấu ngoặc kép"}
+        topic: {type: string, enum: [general, news], default: "general", description: "general cho tra cứu thông thường, news cho tin tức thời sự"}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian: 'hôm nay'→day, 'tuần này'→week"}
         max_results: {type: integer, default: 5, description: "Số kết quả tối đa"}
       required: [query]
 
   - name: fetch
-    description: "Đọc nội dung chi tiết từ một URL cụ thể được cung cấp trực tiếp trong câu hỏi."
+    description: "Lấy nội dung từ một địa chỉ."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ URL cụ thể"}
+        url: {type: string, default: "", description: "Địa chỉ"}
       required: [url]
 
   - name: format
-    description: "Trình bày dữ liệu đã có thành văn bản."
+    description: "Trình bày và định dạng lại dữ liệu/thông tin đã có thành văn bản có cấu trúc. Dùng khi user yêu cầu format, trình bày, tổng hợp thành dạng bullets/sections/brief/thread. KHÔNG dùng để tìm kiếm — chỉ dùng để định dạng lại thông tin sẵn có."
     parameters:
       type: object
       properties:
         items:
           type: array
           default: []
-          description: "Danh sách item"
+          description: "Danh sách item cần format"
           items:
             type: object
             properties:
@@ -73,7 +73,7 @@ tools:
               source: {type: string}
               summary: {type: string}
               section: {type: string}
-        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn mẫu trình bày: 'bullets' cho danh sách, 'sections' cho báo cáo có mục, 'brief' cho tóm tắt ngắn"}
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
@@ -98,13 +98,13 @@ tools:
       required: [query]
 
   - name: papers
-    description: "Tìm bài báo khoa học."
+    description: "Tìm bài báo khoa học trên arXiv theo từ khóa. Truyền query dạng plain text, KHÔNG thêm dấu ngoặc kép quanh từ khóa."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        max_results: {type: integer, default: 5, description: "Số lượng"}
-        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm, truyền plain text (ví dụ: 'Masked Language Modeling', KHÔNG viết '\"Masked Language Modeling\"')"}
+        max_results: {type: integer, default: 5, description: "Số lượng kết quả"}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Cách sắp xếp: 'mới nhất'→submittedDate"}
       required: [query]
 
   - name: paper_text
@@ -116,6 +116,15 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: find_paper_code
+    description: "Tìm kiếm mã nguồn (source code) hoặc repository trên Github liên quan đến bài báo."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Tên bài báo hoặc từ khóa"}
+        max_results: {type: integer, default: 3, description: "Số kết quả tối đa"}
+      required: [query]
 
   - name: extract_method_results
     description: "Trích xuất các phần Phương pháp (Methodology), Kết quả (Results), Tóm tắt (Abstract) và Kết luận từ file text bài báo."
@@ -153,4 +162,3 @@ tools:
         methodology: {type: string, default: "", description: "Phương pháp nghiên cứu"}
         results: {type: string, default: "", description: "Kết quả nghiên cứu"}
       required: [title]
-
