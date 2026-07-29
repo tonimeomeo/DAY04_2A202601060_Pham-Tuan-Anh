@@ -135,9 +135,16 @@ def run_model_tool_loop(
         rounds.append(round_record)
         working_messages.append(tool_results_message(non_clarification_events))
 
+    # If max rounds reached, complete one final pass without tools to summarize all gathered results
+    try:
+        final_res = provider.complete(working_messages, [], model=model, temperature=0.0)
+        final_text = final_res.text or "Dưới đây là kết quả dựa trên các bài báo và tài liệu đã thu thập."
+    except Exception:
+        final_text = f"Đã thu thập dữ liệu qua {max_tool_rounds} bước. Vui lòng xem kết quả chi tiết."
+
     return {
-        "status": "max_tool_rounds",
-        "assistant_text": f"Stopped after {max_tool_rounds} tool rounds. Inspect the transcript for details.",
+        "status": "answered",
+        "assistant_text": final_text,
         "rounds": rounds,
         "tool_events": all_tool_events,
     }

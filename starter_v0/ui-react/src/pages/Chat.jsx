@@ -142,8 +142,8 @@ export default function Chat() {
                                                     </div>
                                                 )}
                                                 {evt.result && (
-                                                    <div className="text-[11px] font-mono text-emerald-400/90 bg-surface-container-lowest/60 p-1.5 rounded">
-                                                        Result: {JSON.stringify(evt.result, null, 1)}
+                                                    <div className="text-[11px] font-mono text-emerald-400/90 bg-surface-container-lowest/80 p-2 rounded max-h-48 overflow-y-auto break-all border border-outline-variant/20">
+                                                        Result: {JSON.stringify(evt.result, null, 2)}
                                                     </div>
                                                 )}
                                             </div>

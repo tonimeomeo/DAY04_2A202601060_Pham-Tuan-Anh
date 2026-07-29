@@ -84,7 +84,7 @@ def chat_endpoint():
                 messages=messages,
                 tools=openai_tools,
                 model=None,
-                max_tool_rounds=4
+                max_tool_rounds=6
             )
             return jsonify({
                 "status": "ok",

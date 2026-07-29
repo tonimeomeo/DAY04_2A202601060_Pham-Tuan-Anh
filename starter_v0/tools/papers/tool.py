@@ -65,7 +65,7 @@ def _get_citation_count(title: str, arxiv_id: str) -> int | None:
     if arxiv_id:
         try:
             url = f"https://api.semanticscholar.org/graph/v1/paper/ARXIV:{arxiv_id}?fields=citationCount"
-            res = requests.get(url, headers=headers, timeout=2.5)
+            res = requests.get(url, headers=headers, timeout=1.5)
             if res.status_code == 200:
                 data = res.json()
                 if "citationCount" in data and data["citationCount"] is not None:
@@ -76,8 +76,8 @@ def _get_citation_count(title: str, arxiv_id: str) -> int | None:
     # 2. Fallback: OpenAlex title search
     if title:
         try:
-            url = f"https://api.openalex.org/works?search={requests.utils.quote(title[:100])}"
-            res = requests.get(url, headers=headers, timeout=2.5)
+            url = f"https://api.openalex.org/works?search={requests.utils.quote(title[:80])}"
+            res = requests.get(url, headers=headers, timeout=1.5)
             if res.status_code == 200:
                 results = res.json().get("results", [])
                 if results and "cited_by_count" in results[0]:
@@ -90,6 +90,8 @@ def _get_citation_count(title: str, arxiv_id: str) -> int | None:
 
 def arxiv_search(query: str = "", max_results: int = 5, sort_by: str = "relevance") -> dict[str, Any]:
     try:
+        from concurrent.futures import ThreadPoolExecutor
+
         max_results = max(1, min(int(max_results or 5), 10))
         sort_by = sort_by if sort_by in {"relevance", "lastUpdatedDate", "submittedDate"} else "relevance"
         params = {
@@ -107,8 +109,11 @@ def arxiv_search(query: str = "", max_results: int = 5, sort_by: str = "relevanc
             "arxiv": "http://arxiv.org/schemas/atom",
         }
         total_node = root.find(".//opensearch:totalResults", namespaces)
-        entries: list[dict[str, Any]] = []
-        for entry in root.findall(".//atom:entry", namespaces):
+        raw_entries = root.findall(".//atom:entry", namespaces)
+
+        # Parse basic fields
+        parsed_entries: list[dict[str, Any]] = []
+        for entry in raw_entries:
             abs_url = _entry_text(entry, "./atom:id", namespaces)
             arxiv_id = _arxiv_id(abs_url)
             title = _entry_text(entry, "./atom:title", namespaces).replace("\n", " ")
@@ -116,27 +121,40 @@ def arxiv_search(query: str = "", max_results: int = 5, sort_by: str = "relevanc
             pdf_url = next((link["href"] for link in links if link.get("title") == "pdf"), f"https://arxiv.org/pdf/{arxiv_id}.pdf")
             primary = entry.find("./arxiv:primary_category", namespaces)
             summary = _entry_text(entry, "./atom:summary", namespaces).replace("\n", " ")
-            citations = _get_citation_count(title, arxiv_id)
-            entries.append({
+
+            parsed_entries.append({
                 "arxiv_id": arxiv_id,
                 "title": title,
                 "summary": " ".join(summary.split()),
                 "authors": [_entry_text(author, "./atom:name", namespaces) for author in entry.findall("./atom:author", namespaces)],
                 "published": _entry_text(entry, "./atom:published", namespaces),
                 "updated": _entry_text(entry, "./atom:updated", namespaces),
-                "citations_count": citations if citations is not None else 0,
                 "url": abs_url,
                 "pdf_url": pdf_url,
                 "source": "arxiv.org",
                 "primary_category": primary.get("term") if primary is not None else None,
                 "categories": [cat.get("term") for cat in entry.findall("./atom:category", namespaces)],
             })
+
+        # Parallel citation fetching
+        with ThreadPoolExecutor(max_workers=min(len(parsed_entries), 5) or 1) as executor:
+            citation_futures = [
+                executor.submit(_get_citation_count, item["title"], item["arxiv_id"])
+                for item in parsed_entries
+            ]
+            for item, future in zip(parsed_entries, citation_futures):
+                try:
+                    c = future.result(timeout=2.0)
+                    item["citations_count"] = c if c is not None else 0
+                except Exception:
+                    item["citations_count"] = 0
+
         return {
             "tool": "arxiv_search",
             "query": query,
             "api_query": params["search_query"],
             "total_results": int(total_node.text) if total_node is not None and total_node.text else None,
-            "items": entries,
+            "items": parsed_entries,
             "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process.",
         }
     except Exception as exc:
