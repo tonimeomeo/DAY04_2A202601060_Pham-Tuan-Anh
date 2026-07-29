@@ -1,7 +1,253 @@
 {
-  "dataset_id": "day04_v2_research_group",
+  "dataset_id": "team_paper_scout_eval",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "10 cases đánh giá khả năng Agent Paper Scout",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "CASE01_Single_Find_Code",
+      "phase": "B",
+      "query": "Bạn hãy tra cứu xem trên github có mã nguồn của bài báo tên là Attention is all you need không?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "Attention is all you need"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra LLM có biết gọi tool mới find_paper_code không."
+      }
+    },
+    {
+      "id": "CASE02_Single_Out_of_Scope",
+      "phase": "B",
+      "query": "Sáng nay ăn phở ở đâu ngon ở Hà Nội nhỉ?",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Single-turn: Đánh lừa hỏi ngoài lề, LLM không được gọi tool nào."
+      }
+    },
+    {
+      "id": "CASE03_Single_Find_Papers",
+      "phase": "B",
+      "query": "Tìm cho tôi các bài báo mới nhất về Masked Language Modeling trên arXiv.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "Masked Language Modeling"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra tool papers mặc định."
+      }
+    },
+    {
+      "id": "CASE04_Single_Read_Paper",
+      "phase": "B",
+      "query": "Hãy tải và đọc nội dung bài báo có mã arXiv là 1706.03762 giúp tôi.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "1706.03762"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Single-turn: Kiểm tra tool paper_text trích xuất PDF."
+      }
+    },
+    {
+      "id": "CASE05_Single_Format",
+      "phase": "B",
+      "query": "Tôi có 3 đường link bài báo này, hãy trình bày lại thành dạng danh sách bullets.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Single-turn: Bắt LLM dùng tool format để định dạng."
+      }
+    },
+    {
+      "id": "CASE06_Multi_Missing_Info",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm cho tôi vài bài báo khoa học."
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {}
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Yêu cầu mờ nhạt, bắt LLM gọi clarify."
+      }
+    },
+    {
+      "id": "CASE07_Multi_Change_Mind",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm bài báo về YOLOv10 nhé."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi đã gọi tool tìm được một số bài báo về YOLOv10."
+        },
+        {
+          "role": "user",
+          "content": "À thôi khoan đã, YOLOv10 cũ rồi, bạn tìm mã nguồn (source code) của YOLOv11 đi."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "find_paper_code",
+            "args": {
+              "query": "YOLOv11"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: User quay xe, LLM phải bắt được ý mới."
+      }
+    },
+    {
+      "id": "CASE08_Multi_Context_Memory",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm báo về thuật toán KAN."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi tìm thấy bài báo 'KAN: Kolmogorov-Arnold Networks' với mã arXiv là 2404.19756."
+        },
+        {
+          "role": "user",
+          "content": "Hãy đọc nội dung file PDF của bài báo đó đi."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2404.19756"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: LLM phải trích xuất được ID từ lịch sử chat để truyền vào tool đọc PDF."
+      }
+    },
+    {
+      "id": "CASE09_Multi_Tool_Switch",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Đọc bài báo này giùm tôi."
+        },
+        {
+          "role": "assistant",
+          "content": "Tôi đã đọc xong, trong bài báo có nhắc đến thuật toán RLHF (Reinforcement Learning from Human Feedback)."
+        },
+        {
+          "role": "user",
+          "content": "Tôi không hiểu thuật toán đó. Hãy tra cứu internet (web search) xem RLHF cụ thể là gì."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "RLHF Reinforcement Learning from Human Feedback"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Chuyển đổi tool, bắt LLM dùng lookup thay vì tiếp tục tìm báo."
+      }
+    },
+    {
+      "id": "CASE10_Multi_Final_Format",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tôi đã có thông tin về bài báo và mã nguồn Github của nó."
+        },
+        {
+          "role": "assistant",
+          "content": "Vâng, bạn muốn tôi làm gì tiếp theo?"
+        },
+        {
+          "role": "user",
+          "content": "Ok, giờ hãy tổng hợp tất cả những gì chúng ta vừa trao đổi thành một bài báo cáo dạng sections."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "sections"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Yêu cầu định dạng báo cáo cuối cùng."
+      }
+    }
+  ]
 }
