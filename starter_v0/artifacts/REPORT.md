@@ -150,3 +150,7 @@ Bằng chứng thực nghiệm từ các phiên chạy chat thực tế:
 4. **Kế hoạch cải tiến tiếp theo:**
    - Tích hợp thêm nguồn tìm kiếm bài báo từ **Google Scholar** hoặc **PubMed** để mở rộng đa dạng các ngành nghiên cứu (y sinh, kinh tế).
    - Nâng cấp mô hình bóc tách cấu trúc PDF từ Regex thô sang các thư viện xử lý tài liệu thông minh như `pdfplumber` hoặc `MinerU` để trích xuất cả bảng biểu (tables) và biểu đồ (figures).
+
+---
+*Báo cáo được hoàn thiện và cập nhật lần cuối vào ngày 29/07/2026 bởi Research Paper Scout Team.*
+
