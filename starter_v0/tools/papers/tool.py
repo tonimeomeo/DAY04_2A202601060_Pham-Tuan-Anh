@@ -59,6 +59,35 @@ def _entry_text(entry: ET.Element, path: str, namespaces: dict[str, str]) -> str
     return (node.text or "").strip() if node is not None and node.text else ""
 
 
+def _get_citation_count(title: str, arxiv_id: str) -> int | None:
+    headers = {"User-Agent": _arxiv_user_agent()}
+    # 1. Semantic Scholar lookup by ArXiv ID
+    if arxiv_id:
+        try:
+            url = f"https://api.semanticscholar.org/graph/v1/paper/ARXIV:{arxiv_id}?fields=citationCount"
+            res = requests.get(url, headers=headers, timeout=2.5)
+            if res.status_code == 200:
+                data = res.json()
+                if "citationCount" in data and data["citationCount"] is not None:
+                    return int(data["citationCount"])
+        except Exception:
+            pass
+
+    # 2. Fallback: OpenAlex title search
+    if title:
+        try:
+            url = f"https://api.openalex.org/works?search={requests.utils.quote(title[:100])}"
+            res = requests.get(url, headers=headers, timeout=2.5)
+            if res.status_code == 200:
+                results = res.json().get("results", [])
+                if results and "cited_by_count" in results[0]:
+                    return int(results[0]["cited_by_count"])
+        except Exception:
+            pass
+
+    return None
+
+
 def arxiv_search(query: str = "", max_results: int = 5, sort_by: str = "relevance") -> dict[str, Any]:
     try:
         max_results = max(1, min(int(max_results or 5), 10))
@@ -82,17 +111,20 @@ def arxiv_search(query: str = "", max_results: int = 5, sort_by: str = "relevanc
         for entry in root.findall(".//atom:entry", namespaces):
             abs_url = _entry_text(entry, "./atom:id", namespaces)
             arxiv_id = _arxiv_id(abs_url)
+            title = _entry_text(entry, "./atom:title", namespaces).replace("\n", " ")
             links = [{"rel": link.get("rel"), "href": link.get("href"), "title": link.get("title")} for link in entry.findall("./atom:link", namespaces)]
             pdf_url = next((link["href"] for link in links if link.get("title") == "pdf"), f"https://arxiv.org/pdf/{arxiv_id}.pdf")
             primary = entry.find("./arxiv:primary_category", namespaces)
             summary = _entry_text(entry, "./atom:summary", namespaces).replace("\n", " ")
+            citations = _get_citation_count(title, arxiv_id)
             entries.append({
                 "arxiv_id": arxiv_id,
-                "title": _entry_text(entry, "./atom:title", namespaces).replace("\n", " "),
+                "title": title,
                 "summary": " ".join(summary.split()),
                 "authors": [_entry_text(author, "./atom:name", namespaces) for author in entry.findall("./atom:author", namespaces)],
                 "published": _entry_text(entry, "./atom:published", namespaces),
                 "updated": _entry_text(entry, "./atom:updated", namespaces),
+                "citations_count": citations if citations is not None else 0,
                 "url": abs_url,
                 "pdf_url": pdf_url,
                 "source": "arxiv.org",

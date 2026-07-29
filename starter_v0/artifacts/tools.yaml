@@ -116,3 +116,41 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: extract_method_results
+    description: "Trích xuất các phần Phương pháp (Methodology), Kết quả (Results), Tóm tắt (Abstract) và Kết luận từ file text bài báo."
+    parameters:
+      type: object
+      properties:
+        txt_path: {type: string, default: "", description: "Đường dẫn file .txt bài báo"}
+        raw_text: {type: string, default: "", description: "Nội dung văn bản trực tiếp"}
+      required: []
+
+  - name: rank_papers
+    description: "Lọc và xếp hạng danh sách bài báo dựa trên độ liên quan tới chủ đề nghiên cứu."
+    parameters:
+      type: object
+      properties:
+        papers:
+          type: array
+          default: []
+          description: "Danh sách bài báo từ tool papers"
+          items:
+            type: object
+        query: {type: string, default: "", description: "Chủ đề nghiên cứu"}
+        top_k: {type: integer, default: 3, description: "Số bài báo chọn lấy"}
+      required: [query]
+
+  - name: summarize_paper
+    description: "Tạo bản tóm tắt báo cáo nghiên cứu dạng Markdown từ metadata và các phần đã trích xuất."
+    parameters:
+      type: object
+      properties:
+        title: {type: string, default: "", description: "Tiêu đề bài báo"}
+        authors: {type: array, items: {type: string}, default: [], description: "Danh sách tác giả"}
+        year: {type: string, default: "", description: "Năm xuất bản"}
+        abstract: {type: string, default: "", description: "Tóm tắt abstract"}
+        methodology: {type: string, default: "", description: "Phương pháp nghiên cứu"}
+        results: {type: string, default: "", description: "Kết quả nghiên cứu"}
+      required: [title]
+
