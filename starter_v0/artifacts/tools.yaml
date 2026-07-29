@@ -9,51 +9,51 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Hỏi lại người dùng khi THIẾU THÔNG TIN bắt buộc (ví dụ: thiếu handle/URL) hoặc YÊU CẦU XÁC NHẬN (yes/no) trước các hành động gửi/đăng bài ra ngoài."
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
+        question: {type: string, default: "", description: "Nội dung câu hỏi dành cho người dùng"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu phản hồi cần nhận: 'text' khi cần xin thêm thông tin, 'yes_no' khi cần xác nhận hành động"}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Trích xuất danh sách bài đăng/tweet của MỘT CÁ NHÂN HOẶC TÀI KHOẢN CỤ THỂ (ví dụ: Sam Altman -> sama, Elon Musk -> elonmusk)."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        screenname: {type: string, default: "", description: "Twitter/X handle của tài khoản (ví dụ: sama, elonmusk, karpathy)"}
+        limit: {type: integer, default: 5, description: "Số lượng bài đăng cần lấy"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Tìm kiếm các bài đăng trên mạng xã hội theo CHỦ ĐỀ HOẶC TỪ KHÓA (không thuộc về một cá nhân cụ thể)."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        query: {type: string, default: "", description: "Từ khóa hoặc chủ đề tìm kiếm"}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Sắp xếp theo 'Top' (phổ biến nhất) hoặc 'Latest' (mới nhất)"}
+        limit: {type: integer, default: 5, description: "Số lượng kết quả cần lấy"}
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tìm kiếm bài viết hoặc tin tức trên internet theo từ khóa. Dùng topic='news' cho tin thời sự, timeframe='day' cho hôm nay, 'week' cho tuần này."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
-        max_results: {type: integer, default: 5, description: "Số kết quả"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm"}
+        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại: 'news' cho tin tức/thời sự, 'general' cho thông tin chung"}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian: 'day' (hôm nay), 'week' (tuần này), 'month', 'year'"}
+        max_results: {type: integer, default: 5, description: "Số kết quả tối đa"}
       required: [query]
 
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: "Đọc nội dung chi tiết từ một URL cụ thể được cung cấp trực tiếp trong câu hỏi."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: {type: string, default: "", description: "Địa chỉ URL cụ thể"}
       required: [url]
 
   - name: format

@@ -105,12 +105,22 @@ class GeminiProvider:
         if declarations:
             config_kwargs["tools"] = [types.Tool(function_declarations=declarations)]
 
+        import time
+
         client = genai.Client(api_key=api_key)
-        resp = client.models.generate_content(
-            model=model or self.default_model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
+        for attempt in range(5):
+            try:
+                resp = client.models.generate_content(
+                    model=model or self.default_model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                break
+            except Exception as exc:
+                if ("429" in str(exc) or "RESOURCE_EXHAUSTED" in str(exc)) and attempt < 4:
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                raise exc
 
         text_parts: list[str] = []
         calls: list[ToolCall] = []
